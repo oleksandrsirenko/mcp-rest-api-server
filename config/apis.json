@@ -1,0 +1,27 @@
+{
+  "apis": [
+    {
+      "id": "jsonplaceholder",
+      "name": "JSONPlaceholder",
+      "description": "Fake REST API for testing and prototyping",
+      "baseUrl": "https://jsonplaceholder.typicode.com",
+      "enabled": true,
+      "rateLimitPerMinute": 60,
+      "timeout": 10000,
+      "tools": [
+        {
+          "name": "get_posts",
+          "description": "Get all posts or filter by user",
+          "endpoint": "/posts",
+          "method": "GET"
+        },
+        {
+          "name": "get_post",
+          "description": "Get a specific post by ID",
+          "endpoint": "/posts/{id}",
+          "method": "GET"
+        }
+      ]
+    }
+  ]
+}

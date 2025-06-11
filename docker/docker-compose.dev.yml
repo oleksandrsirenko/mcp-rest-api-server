@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: mcp-redis-dev
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+
+  mcp-server:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.dev
+    container_name: mcp-server-dev
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - TRANSPORT=http
+      - PORT=3000
+      - HOST=0.0.0.0
+      - REDIS_URL=redis://redis:6379
+      - LOG_LEVEL=debug
+      - ENABLE_DEBUG=true
+    volumes:
+      - ../src:/app/src
+      - ../config:/app/config
+      - ../tests:/app/tests
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  redis_data:
