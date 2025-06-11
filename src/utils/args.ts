@@ -23,6 +23,8 @@ export function parseArgs(): ServerArgs {
     const arg = args[i];
     const value = args[i + 1];
 
+    if (!arg) continue; // Skip if arg is undefined
+
     switch (arg) {
       case '--transport':
       case '-t':
@@ -56,16 +58,19 @@ export function parseArgs(): ServerArgs {
       default:
         if (arg.startsWith('--transport=')) {
           const transportValue = arg.split('=')[1];
-          if (['stdio', 'http', 'both'].includes(transportValue)) {
+          if (transportValue && ['stdio', 'http', 'both'].includes(transportValue)) {
             config.transport = transportValue as 'stdio' | 'http' | 'both';
           }
         } else if (arg.startsWith('--port=')) {
           const portValue = arg.split('=')[1];
-          if (!isNaN(parseInt(portValue, 10))) {
+          if (portValue && !isNaN(parseInt(portValue, 10))) {
             config.port = parseInt(portValue, 10);
           }
         } else if (arg.startsWith('--host=')) {
-          config.host = arg.split('=')[1];
+          const hostValue = arg.split('=')[1];
+          if (hostValue) {
+            config.host = hostValue;
+          }
         }
         break;
     }

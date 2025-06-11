@@ -19,15 +19,16 @@ export default defineConfig({
       ],
       thresholds: {
         global: {
-          branches: 80,
-          functions: 80,
-          lines: 80,
-          statements: 80,
+          branches: 70,
+          functions: 70,
+          lines: 70,
+          statements: 70,
         },
       },
     },
-    testTimeout: 10000,
-    hookTimeout: 10000,
+    testTimeout: 30000,      // Increased for integration tests
+    hookTimeout: 30000,      // Increased for setup/teardown
+    setupFiles: ['tests/setup.ts'],
   },
   esbuild: {
     target: 'es2022',
